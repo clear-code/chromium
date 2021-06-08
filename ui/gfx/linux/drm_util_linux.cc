@@ -40,8 +40,10 @@ int GetFourCCFormatFromBufferFormat(gfx::BufferFormat format) {
       return DRM_FORMAT_YVU420;
     case gfx::BufferFormat::YUV_420_BIPLANAR:
       return DRM_FORMAT_NV12;
+#ifdef DRM_FORMAT_P010
     case gfx::BufferFormat::P010:
       return DRM_FORMAT_P010;
+#endif // DRM_FORMAT_P010
   }
   return DRM_FORMAT_INVALID;
 }
@@ -70,8 +72,10 @@ gfx::BufferFormat GetBufferFormatFromFourCCFormat(int format) {
       return gfx::BufferFormat::YUV_420_BIPLANAR;
     case DRM_FORMAT_YVU420:
       return gfx::BufferFormat::YVU_420;
+#ifdef DRM_FORMAT_P010
     case DRM_FORMAT_P010:
       return gfx::BufferFormat::P010;
+#endif // DRM_FORMAT_P010
     default:
       NOTREACHED();
       return gfx::BufferFormat::BGRA_8888;
@@ -91,7 +95,9 @@ bool IsValidBufferFormat(uint32_t current_format) {
     case DRM_FORMAT_RGB565:
     case DRM_FORMAT_NV12:
     case DRM_FORMAT_YVU420:
+#ifdef DRM_FORMAT_P010
     case DRM_FORMAT_P010:
+#endif // DRM_FORMAT_P010
       return true;
     default:
       return false;
