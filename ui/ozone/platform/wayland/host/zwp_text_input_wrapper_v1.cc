@@ -58,12 +58,14 @@ void ZWPTextInputWrapperV1::Reset() {
 }
 
 void ZWPTextInputWrapperV1::Activate(WaylandWindow* window) {
-  zwp_text_input_v1_activate(obj_.get(), connection_->seat(),
-                             window->root_surface()->surface());
+  if (connection_->seat())
+    zwp_text_input_v1_activate(obj_.get(), connection_->seat(),
+                               window->root_surface()->surface());
 }
 
 void ZWPTextInputWrapperV1::Deactivate() {
-  zwp_text_input_v1_deactivate(obj_.get(), connection_->seat());
+  if (connection_->seat())
+    zwp_text_input_v1_deactivate(obj_.get(), connection_->seat());
 }
 
 void ZWPTextInputWrapperV1::ShowInputPanel() {
