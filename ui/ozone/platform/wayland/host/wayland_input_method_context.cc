@@ -210,8 +210,20 @@ void WaylandInputMethodContext::OnPreeditString(
     base::StringPiece text,
     const std::vector<SpanStyle>& spans,
     int32_t preedit_cursor) {
+  VLOG(1) << "WaylandInputMethodContext::OnPreeditString: " << text;
+  VLOG(1) << "WaylandInputMethodContext::OnPreeditString: cursor: " << preedit_cursor;
+
   ui::CompositionText composition_text;
   composition_text.text = base::UTF8ToUTF16(text);
+
+  if (spans.empty()) {
+    VLOG(1) << "WaylandInputMethodContext::OnPreeditString: Style is empty, apply default one";
+    ImeTextSpan text_span;
+    text_span.thickness = ImeTextSpan::Thickness::kThick;
+    text_span.start_offset = 0;
+    text_span.end_offset = composition_text.text.length();
+    composition_text.ime_text_spans.push_back(std::move(text_span));
+  }
   for (const auto& span : spans) {
     ImeTextSpan text_span;
     auto start_offset = OffsetFromUTF8Offset(text, span.index);
@@ -267,6 +279,7 @@ void WaylandInputMethodContext::OnPreeditString(
 }
 
 void WaylandInputMethodContext::OnCommitString(base::StringPiece text) {
+  VLOG(1) << "WaylandInputMethodContext::OnCommitString: " << text;
   ime_delegate_->OnCommit(base::UTF8ToUTF16(text));
 }
 
