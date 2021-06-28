@@ -350,7 +350,9 @@ void FocusManager::SetFocusedViewWithReason(View* view,
   if (view && !widget_->IsActive()) {
     SetStoredFocusView(view);
     widget_->Activate();
+#if !defined(USE_OZONE)
     return;
+#endif
   }
 #endif
 
