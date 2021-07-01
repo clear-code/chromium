@@ -35,6 +35,8 @@ class WaylandToplevelWindow : public WaylandWindow,
   // be called after processing all pending events in the wayland connection.
   void ApplyPendingBounds();
 
+  void ForceActivate() override;
+
   // WmMoveResizeHandler
   void DispatchHostWindowDragMovement(
       int hittest,
