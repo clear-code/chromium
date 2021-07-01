@@ -24,6 +24,7 @@
 #include "ui/events/keycodes/dom/dom_code.h"
 #include "ui/events/types/event_type.h"
 #include "ui/gfx/range/range.h"
+#include "ui/ozone/platform/wayland/host/wayland_window.h"
 #include "ui/ozone/platform/wayland/host/wayland_connection.h"
 #include "ui/ozone/platform/wayland/host/zwp_text_input_wrapper_v1.h"
 #include "ui/ozone/public/ozone_switches.h"
@@ -526,6 +527,8 @@ void WaylandInputMethodContext::MaybeUpdateActivated() {
 
   activated_ = activated;
   if (activated) {
+    window->ForceActivate();
+    window->set_keyboard_focus(true);
     text_input_->Activate(window);
     text_input_->ShowInputPanel();
   } else {

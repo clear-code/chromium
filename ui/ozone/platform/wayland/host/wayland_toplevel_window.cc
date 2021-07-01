@@ -85,6 +85,14 @@ void WaylandToplevelWindow::ApplyPendingBounds() {
   SetBoundsDip(pending_configures_.back().bounds_dip);
 }
 
+void WaylandToplevelWindow::ForceActivate()
+{
+  if (!is_active_) {
+    is_active_ = true;
+    delegate()->OnActivationChanged(is_active_);
+  }
+}
+
 void WaylandToplevelWindow::DispatchHostWindowDragMovement(
     int hittest,
     const gfx::Point& pointer_location_in_px) {

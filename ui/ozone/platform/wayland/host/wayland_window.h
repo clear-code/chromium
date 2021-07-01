@@ -256,6 +256,8 @@ class WaylandWindow : public PlatformWindow,
   // WaylandPopup, if |this| has type of WaylandPopup.
   virtual WaylandPopup* AsWaylandPopup();
 
+  virtual void ForceActivate() {}
+
   scoped_refptr<base::SingleThreadTaskRunner> ui_task_runner() {
     return ui_task_runner_;
   }
