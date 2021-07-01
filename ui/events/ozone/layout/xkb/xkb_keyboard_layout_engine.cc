@@ -662,6 +662,22 @@ XkbKeyboardLayoutEngine::XkbKeyboardLayoutEngine(
   xkb_context_.reset(xkb_context_new(XKB_CONTEXT_NO_DEFAULT_INCLUDES));
   xkb_context_include_path_append(xkb_context_.get(),
                                   "/usr/share/X11/xkb");
+
+  struct xkb_rule_names names = {
+    .rules = NULL,
+    .model = "pc101",
+    .layout = "us",
+    .variant = "",
+    .options = "",
+  };
+  struct xkb_keymap *keymap =
+    xkb_keymap_new_from_names(xkb_context_.get(), &names,
+			      XKB_KEYMAP_COMPILE_NO_FLAGS);
+  if (keymap) {
+    VLOG(1) << "Set pc101 as default keymap";
+    SetKeymap(keymap);
+    xkb_keymap_unref(keymap);
+  }
 }
 
 XkbKeyboardLayoutEngine::~XkbKeyboardLayoutEngine() {
