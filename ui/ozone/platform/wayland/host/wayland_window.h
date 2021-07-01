@@ -211,6 +211,8 @@ class WaylandWindow : public PlatformWindow,
   // not support that).
   virtual bool IsActive() const;
 
+  virtual void ForceActivate() {}
+
  protected:
   WaylandWindow(PlatformWindowDelegate* delegate,
                 WaylandConnection* connection);
