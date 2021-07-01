@@ -219,6 +219,8 @@ class WaylandWindow : public PlatformWindow,
   // not support that).
   virtual bool IsActive() const;
 
+  virtual void ForceActivate() {}
+
   scoped_refptr<base::SingleThreadTaskRunner> ui_task_runner() {
     return ui_task_runner_;
   }
