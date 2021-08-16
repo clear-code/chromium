@@ -465,6 +465,8 @@ void WaylandEventSource::HandleTouchFocusChange(WaylandWindow* window,
   DCHECK(window);
   bool actual_focus = id ? !ShouldUnsetTouchFocus(window, id.value()) : focused;
   window->set_touch_focus(actual_focus);
+  if (actual_focus)
+    window_manager_->SetPointerFocusedWindow(window);
 }
 
 // Focus must not be unset if there is another touch point within |window|.
