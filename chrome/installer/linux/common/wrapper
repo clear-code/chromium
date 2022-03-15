@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright (c) 2011 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -39,13 +39,7 @@ export CHROME_VERSION_EXTRA="@@CHANNEL@@"
 # We don't want bug-buddy intercepting our crashes. http://crbug.com/24120
 export GNOME_DISABLE_CRASH_DIALOG=SET_BY_GOOGLE_CHROME
 
-# Sanitize std{in,out,err} because they'll be shared with untrusted child
-# processes (http://crbug.com/376567).
-exec < /dev/null
-exec > >(exec cat)
-exec 2> >(exec cat >&2)
-
 CHROME_EXTRA_ARGS=""
 
 # Note: exec -a below is a bashism.
-exec -a "$0" "$HERE/@@PROGNAME@@" ${CHROME_EXTRA_ARGS} "$@"
+exec "$HERE/@@PROGNAME@@" ${CHROME_EXTRA_ARGS} "$@"
