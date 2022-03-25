@@ -6532,8 +6532,10 @@ void RenderFrameHostImpl::ShowContextMenu(
     return;
   }
 
+#if 0
   delegate_->ShowContextMenu(*this, std::move(context_menu_client),
                              validated_params);
+#endif
 }
 
 void RenderFrameHostImpl::DidLoadResourceFromMemoryCache(
