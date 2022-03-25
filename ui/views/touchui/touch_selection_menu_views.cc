@@ -67,6 +67,7 @@ TouchSelectionMenuViews::TouchSelectionMenuViews(
 
 void TouchSelectionMenuViews::ShowMenu(const gfx::Rect& anchor_rect,
                                        const gfx::Size& handle_image_size) {
+#if 0
   CreateButtons();
 
   // After buttons are created, check if there is enough room between handles to
@@ -99,6 +100,7 @@ void TouchSelectionMenuViews::ShowMenu(const gfx::Rect& anchor_rect,
   // doesn't make sense for a menu, so put it back on top.
   widget->StackAtTop();
   widget->Show();
+#endif
 }
 
 bool TouchSelectionMenuViews::IsMenuAvailable(

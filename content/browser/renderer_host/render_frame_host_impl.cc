@@ -5538,8 +5538,10 @@ void RenderFrameHostImpl::ShowContextMenu(
         GetProcess(), bad_message::RFH_NEGATIVE_SELECTION_START_OFFSET);
   }
 
+#if 0
   delegate_->ShowContextMenu(this, std::move(context_menu_client),
                              validated_params);
+#endif
 }
 
 void RenderFrameHostImpl::DidLoadResourceFromMemoryCache(
