@@ -367,6 +367,7 @@ WebInputEventResult GestureManager::HandleGestureTap(
 
 WebInputEventResult GestureManager::HandleGestureLongPress(
     const GestureEventWithHitTestResults& targeted_event) {
+#if 0
   const WebGestureEvent& gesture_event = targeted_event.Event();
 
   // FIXME: Ideally we should try to remove the extra mouse-specific hit-tests
@@ -407,6 +408,9 @@ WebInputEventResult GestureManager::HandleGestureLongPress(
       inner_node ? inner_node->GetDocument().GetFrame() : nullptr,
       mojom::blink::UserActivationNotificationType::kInteraction);
   return SendContextMenuEventForGesture(targeted_event);
+#else
+  return WebInputEventResult::kNotHandled;
+#endif
 }
 
 WebInputEventResult GestureManager::HandleGestureLongTap(
