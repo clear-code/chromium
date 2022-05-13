@@ -781,9 +781,11 @@ void Textfield::OnGestureEvent(ui::GestureEvent* event) {
           OnAfterUserAction();
         }
       } else if (event->details().tap_count() == 2) {
+#if 0
         OnBeforeUserAction();
         SelectWordAt(event->location());
         OnAfterUserAction();
+#endif
       } else {
         OnBeforeUserAction();
         SelectAll(false);
@@ -793,6 +795,7 @@ void Textfield::OnGestureEvent(ui::GestureEvent* event) {
       event->SetHandled();
       break;
     case ui::ET_GESTURE_LONG_PRESS:
+#if 0
       if (!GetRenderText()->IsPointInSelection(event->location())) {
         // If long-press happens outside selection, select word and try to
         // activate touch selection.
@@ -812,6 +815,7 @@ void Textfield::OnGestureEvent(ui::GestureEvent* event) {
         DestroyTouchSelection();
         initiating_drag_ = switches::IsTouchDragDropEnabled();
       }
+#endif
       break;
     case ui::ET_GESTURE_LONG_TAP:
       // If touch selection is enabled, the context menu on long tap will be

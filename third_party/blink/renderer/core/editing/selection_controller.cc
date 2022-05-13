@@ -628,6 +628,9 @@ bool SelectionController::SelectClosestWordFromHitTestResult(
     const HitTestResult& result,
     AppendTrailingWhitespace append_trailing_whitespace,
     SelectInputEventType select_input_event_type) {
+  if (select_input_event_type == SelectInputEventType::kTouch)
+    return false;
+
   Node* const inner_node = result.InnerPossiblyPseudoNode();
 
   if (!inner_node || !inner_node->GetLayoutObject() ||
@@ -759,6 +762,9 @@ template <typename MouseEventObject>
 bool SelectionController::SelectClosestWordFromMouseEvent(
     const MouseEventObject* mouse_event,
     const HitTestResult& result) {
+  if (mouse_event->FromTouch())
+    return false;
+
   if (!mouse_down_may_start_select_)
     return false;
 
@@ -965,6 +971,9 @@ bool SelectionController::HandleTripleClick(
     const MouseEventWithHitTestResults& event) {
   TRACE_EVENT0("blink",
                "SelectionController::handleMousePressEventTripleClick");
+
+  if (event.Event().FromTouch())
+    return false;
 
   if (!Selection().IsAvailable()) {
     // editing/shadow/doubleclick-on-meter-in-shadow-crash.html reach here.
@@ -1181,6 +1190,7 @@ bool SelectionController::HandlePasteGlobalSelection(
 
 bool SelectionController::HandleGestureLongPress(
     const HitTestResult& hit_test_result) {
+#if 0
   TRACE_EVENT0("blink", "SelectionController::handleGestureLongPress");
 
   if (!Selection().IsAvailable())
@@ -1204,6 +1214,7 @@ bool SelectionController::HandleGestureLongPress(
   if (!inner_node->isConnected() || !inner_node->GetLayoutObject())
     return false;
   SetCaretAtHitTestResult(hit_test_result);
+#endif
   return false;
 }
 
