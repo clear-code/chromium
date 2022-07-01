@@ -65,6 +65,12 @@ namespace printing {
 
 namespace {
 
+#if defined(OS_LINUX) && defined(USE_OZONE)
+bool g_should_prompt_for_filename = false;
+#else
+bool g_should_prompt_for_filename = true;
+#endif
+
 constexpr base::FilePath::CharType kPdfExtension[] = FILE_PATH_LITERAL("pdf");
 
 class PrintingContextDelegate : public PrintingContext::Delegate {
@@ -471,12 +477,16 @@ void PdfPrinterHandler::OnDirectorySelected(const base::FilePath& filename,
   file_type_info.allowed_paths =
       ui::SelectFileDialog::FileTypeInfo::NATIVE_PATH;
 
-  select_file_dialog_ =
-      ui::SelectFileDialog::Create(this, nullptr /*policy already checked*/);
-  select_file_dialog_->SelectFile(
-      ui::SelectFileDialog::SELECT_SAVEAS_FILE, std::u16string(), path,
-      &file_type_info, 0, base::FilePath::StringType(),
-      platform_util::GetTopLevel(preview_web_contents_->GetNativeView()), NULL);
+  if (g_should_prompt_for_filename) {
+    select_file_dialog_ =
+        ui::SelectFileDialog::Create(this, nullptr /*policy already checked*/);
+    select_file_dialog_->SelectFile(
+        ui::SelectFileDialog::SELECT_SAVEAS_FILE, std::u16string(), path,
+        &file_type_info, 0, base::FilePath::StringType(),
+        platform_util::GetTopLevel(preview_web_contents_->GetNativeView()), NULL);
+  } else {
+    FileSelected(path, 0, NULL);
+  }
 }
 
 base::FilePath PdfPrinterHandler::GetSaveLocation() const {
