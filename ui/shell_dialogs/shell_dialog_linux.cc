@@ -32,7 +32,11 @@ SelectFileDialog* CreateSelectFileDialog(
   if (shell_dialogs)
     return shell_dialogs->CreateSelectFileDialog(listener, std::move(policy));
 #endif
+#if defined(USE_OZONE)
+  // Disable the file picker explicitly on embedded systems
+#else
   NOTIMPLEMENTED();
+#endif
   return nullptr;
 }
 

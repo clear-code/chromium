@@ -43,7 +43,11 @@ namespace {
 
 // If false, we don't prompt the user as to where to save the file.  This
 // exists only for testing.
+#if defined(OS_LINUX) && defined(USE_OZONE)
+bool g_should_prompt_for_filename = false;
+#else
 bool g_should_prompt_for_filename = true;
+#endif
 
 void OnSavePackageDownloadCreated(download::DownloadItem* download) {
   ChromeDownloadManagerDelegate::DisableSafeBrowsing(download);
