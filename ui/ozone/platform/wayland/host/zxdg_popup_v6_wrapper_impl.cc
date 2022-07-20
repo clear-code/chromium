@@ -172,10 +172,7 @@ bool ZXDGPopupV6WrapperImpl::InitializeV6(
 
   zxdg_positioner_v6_destroy(positioner);
 
-  if (CanGrabPopup(connection)) {
-    zxdg_popup_v6_grab(zxdg_popup_v6_.get(), connection->seat(),
-                       connection->serial());
-  }
+  GrabIfPossible(connection, wayland_window_->parent_window());
   zxdg_popup_v6_add_listener(zxdg_popup_v6_.get(), &zxdg_popup_v6_listener,
                              this);
 
@@ -258,6 +255,10 @@ ZXDGSurfaceV6WrapperImpl* ZXDGPopupV6WrapperImpl::zxdg_surface_v6_wrapper()
     const {
   DCHECK(zxdg_surface_v6_wrapper_.get());
   return zxdg_surface_v6_wrapper_.get();
+}
+
+void ZXDGPopupV6WrapperImpl::Grab(WaylandConnection* connection) {
+  zxdg_popup_v6_grab(zxdg_popup_v6_.get(), connection->seat(), connection->event_serial().serial);
 }
 
 }  // namespace ui

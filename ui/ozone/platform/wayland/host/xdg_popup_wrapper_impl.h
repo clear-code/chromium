@@ -28,6 +28,9 @@ class XDGPopupWrapperImpl : public ShellPopupWrapper {
                   const gfx::Rect& bounds) override;
   void AckConfigure(uint32_t serial) override;
 
+ protected:
+  void Grab(WaylandConnection* connection) override;
+
  private:
   bool InitializeStable(WaylandConnection* connection,
                         const gfx::Rect& bounds,

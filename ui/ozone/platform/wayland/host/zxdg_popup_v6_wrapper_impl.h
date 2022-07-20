@@ -28,6 +28,9 @@ class ZXDGPopupV6WrapperImpl : public ShellPopupWrapper {
                   const gfx::Rect& bounds) override;
   void AckConfigure(uint32_t serial) override;
 
+ protected:
+  void Grab(WaylandConnection* connection) override;
+
  private:
   bool InitializeV6(WaylandConnection* connection,
                     const gfx::Rect& bounds,

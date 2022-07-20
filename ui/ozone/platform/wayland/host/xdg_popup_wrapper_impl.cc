@@ -170,9 +170,7 @@ bool XDGPopupWrapperImpl::InitializeStable(
 
   xdg_positioner_destroy(positioner);
 
-  if (CanGrabPopup(connection)) {
-    xdg_popup_grab(xdg_popup_.get(), connection->seat(), connection->serial());
-  }
+  GrabIfPossible(connection, wayland_window_->parent_window());
   xdg_popup_add_listener(xdg_popup_.get(), &xdg_popup_listener, this);
 
   wayland_window_->root_surface()->Commit();
@@ -251,6 +249,10 @@ void XDGPopupWrapperImpl::PopupDone(void* data, struct xdg_popup* xdg_popup) {
 XDGSurfaceWrapperImpl* XDGPopupWrapperImpl::xdg_surface_wrapper() const {
   DCHECK(xdg_surface_wrapper_.get());
   return xdg_surface_wrapper_.get();
+}
+
+void XDGPopupWrapperImpl::Grab(WaylandConnection* connection) {
+  xdg_popup_grab(xdg_popup_.get(), connection->seat(), connection->event_serial().serial);
 }
 
 }  // namespace ui

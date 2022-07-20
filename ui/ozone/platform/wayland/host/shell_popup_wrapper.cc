@@ -5,13 +5,30 @@
 #include "ui/ozone/platform/wayland/host/shell_popup_wrapper.h"
 
 #include "base/check_op.h"
+#include "base/environment.h"
+#include "base/nix/xdg_util.h"
 #include "base/notreached.h"
+#include "build/chromeos_buildflags.h"
 #include "ui/ozone/platform/wayland/common/wayland_util.h"
 #include "ui/ozone/platform/wayland/host/wayland_connection.h"
+#include "ui/ozone/platform/wayland/host/wayland_popup.h"
 #include "ui/ozone/platform/wayland/host/wayland_toplevel_window.h"
+#include "ui/ozone/platform/wayland/host/wayland_window.h"
 #include "ui/platform_window/platform_window_init_properties.h"
 
 namespace ui {
+
+namespace {
+
+#if !BUILDFLAG(IS_CHROMEOS_LACROS)
+bool IsGnomeShell() {
+  auto env = base::Environment::Create();
+  return base::nix::GetDesktopEnvironment(env.get()) ==
+         base::nix::DESKTOP_ENVIRONMENT_GNOME;
+}
+#endif  // !BUILDFLAG(IS_CHROMEOS_LACROS)
+
+}  // namespace
 
 constexpr uint32_t kAnchorDefaultWidth = 1;
 constexpr uint32_t kAnchorDefaultHeight = 1;
@@ -181,21 +198,36 @@ PopupType ShellPopupWrapper::GetPopupTypeForPositioner(
     return PopupType::TYPE_3DOT_CHILD_MENU;
 }
 
-bool ShellPopupWrapper::CanGrabPopup(WaylandConnection* connection) const {
+void ShellPopupWrapper::GrabIfPossible(WaylandConnection* connection,
+                                       WaylandWindow* parent_window) {
   // When drag process starts, as described the protocol -
   // https://goo.gl/1Mskq3, the client must have an active implicit grab. If
   // we try to create a popup and grab it, it will be immediately dismissed.
   // Thus, do not take explicit grab during drag process.
   if (connection->IsDragInProgress() || !connection->seat())
-    return false;
+    return;
 
-  // According to the definition of the xdg protocol, the grab request must be
-  // used in response to some sort of user action like a button press, key
-  // press, or touch down event.
   EventType last_event_type = connection->event_serial().event_type;
-  return last_event_type == ET_TOUCH_PRESSED ||
-         last_event_type == ET_KEY_PRESSED ||
-         last_event_type == ET_MOUSE_PRESSED;
+  if (last_event_type != ET_TOUCH_PRESSED &&
+      last_event_type != ET_KEY_PRESSED &&
+      last_event_type != ET_MOUSE_PRESSED)
+    return;
+
+  // The parent of a grabbing popup must either be an xdg_toplevel surface or
+  // another xdg_popup with an explicit grab. If it is a popup that did not take
+  // an explicit grab, an error will be raised, so early out if that's the case.
+  auto* parent_popup = parent_window->AsWaylandPopup();
+  if (parent_popup && !parent_popup->shell_popup()->has_grab_) {
+    return;
+  }
+
+#if !BUILDFLAG(IS_CHROMEOS_LACROS)
+  if (last_event_type == ET_TOUCH_PRESSED && IsGnomeShell())
+    return;
+#endif  // !BUILDFLAG(IS_CHROMEOS_LACROS)
+
+  Grab(connection);
+  has_grab_ = true;
 }
 
 }  // namespace ui

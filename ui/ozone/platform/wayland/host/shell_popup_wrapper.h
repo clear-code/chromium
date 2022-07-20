@@ -5,6 +5,8 @@
 #ifndef UI_OZONE_PLATFORM_WAYLAND_HOST_SHELL_POPUP_WRAPPER_H_
 #define UI_OZONE_PLATFORM_WAYLAND_HOST_SHELL_POPUP_WRAPPER_H_
 
+#include <cstdint>
+
 #include "ui/gfx/geometry/rect.h"
 #include "ui/ozone/platform/wayland/common/wayland_object.h"
 #include "ui/platform_window/platform_window_init_properties.h"
@@ -70,7 +72,7 @@ inline WlConstraintAdjustment operator&(WlConstraintAdjustment a,
 // A wrapper around different versions of xdg popups.
 class ShellPopupWrapper {
  public:
-  virtual ~ShellPopupWrapper() {}
+  virtual ~ShellPopupWrapper() = default;
 
   // Initializes the popup surface.
   virtual bool Initialize(WaylandConnection* connection,
@@ -83,7 +85,19 @@ class ShellPopupWrapper {
   PopupType GetPopupTypeForPositioner(PlatformWindowType type,
                                       int last_pointer_button_pressed,
                                       WaylandWindow* parent_window) const;
-  bool CanGrabPopup(WaylandConnection* connection) const;
+
+ protected:
+  // Asks the compositor to take explicit-grab for this popup.
+  virtual void Grab(WaylandConnection* connection) = 0;
+
+  // Returns the serial value for a popup grab, if there is one available.
+  void GrabIfPossible(WaylandConnection* connection,
+                      WaylandWindow* parent_window);
+
+ private:
+  // Tells if explicit grab was taken for this popup. As per
+  // https://wayland.app/protocols/xdg-shell#xdg_popup:request:grab
+  bool has_grab_ = false;
 };
 
 gfx::Rect GetAnchorRect(PopupType menu_type,
