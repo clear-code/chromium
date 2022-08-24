@@ -39,6 +39,9 @@ class COMPONENT_EXPORT(UI_BASE_IME_LINUX) LinuxInputMethodContext {
   virtual void SetSurroundingText(const std::u16string& text,
                                   const gfx::Range& selection_range) = 0;
 
+  // Tells the system IME the text input type.
+  virtual void SetTextInputType(TextInputType text_input_type) {}
+
   // Resets the context.  A client needs to call OnTextInputTypeChanged() again
   // before calling DispatchKeyEvent().
   virtual void Reset() = 0;

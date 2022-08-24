@@ -103,6 +103,10 @@ void ZWPTextInputWrapperV1::SetSurroundingText(
                                          selection_range.end());
 }
 
+void ZWPTextInputWrapperV1::SetContentType(uint32_t hint, uint32_t purpose) {
+  zwp_text_input_v1_set_content_type(obj_.get(), hint, purpose);
+}
+
 void ZWPTextInputWrapperV1::ResetInputEventState() {
   spans_.clear();
   preedit_cursor_ = -1;

@@ -356,7 +356,7 @@ void InputMethodAuraLinux::OnTextInputTypeChanged(
     const TextInputClient* client) {
   UpdateContextFocusState();
   InputMethodBase::OnTextInputTypeChanged(client);
-  // TODO(yoichio): Support inputmode HTML attribute.
+  context_->SetTextInputType(text_input_type_);
 }
 
 void InputMethodAuraLinux::OnCaretBoundsChanged(const TextInputClient* client) {

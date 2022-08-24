@@ -209,6 +209,67 @@ void WaylandInputMethodContext::SetSurroundingText(
     text_input_->SetSurroundingText(text, selection_range);
 }
 
+void WaylandInputMethodContext::SetTextInputType(TextInputType text_input_type) {
+  uint32_t hint = ZWP_TEXT_INPUT_V1_CONTENT_HINT_NONE;
+  uint32_t purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_NORMAL;
+
+  switch (text_input_type) {
+    case TEXT_INPUT_TYPE_NONE:
+      break;
+    case TEXT_INPUT_TYPE_TEXT:
+      break;
+    case TEXT_INPUT_TYPE_PASSWORD:
+      hint = ZWP_TEXT_INPUT_V1_CONTENT_HINT_PASSWORD;
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_PASSWORD;
+      break;
+    case TEXT_INPUT_TYPE_SEARCH:
+      break;
+    case TEXT_INPUT_TYPE_EMAIL:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_EMAIL;
+      break;
+    case TEXT_INPUT_TYPE_NUMBER:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_NUMBER;
+      break;
+    case TEXT_INPUT_TYPE_TELEPHONE:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_PHONE;
+      break;
+    case TEXT_INPUT_TYPE_URL:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_URL;
+      break;
+    case TEXT_INPUT_TYPE_DATE:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_DATE;
+      break;
+    case TEXT_INPUT_TYPE_DATE_TIME:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_DATETIME;
+      break;
+    case TEXT_INPUT_TYPE_DATE_TIME_LOCAL:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_DATETIME;
+      break;
+    case TEXT_INPUT_TYPE_MONTH:
+      break;
+    case TEXT_INPUT_TYPE_TIME:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_TIME;
+      break;
+    case TEXT_INPUT_TYPE_WEEK:
+      break;
+    case TEXT_INPUT_TYPE_TEXT_AREA:
+      hint = ZWP_TEXT_INPUT_V1_CONTENT_HINT_MULTILINE;
+      break;
+    case TEXT_INPUT_TYPE_CONTENT_EDITABLE:
+      break;
+    case TEXT_INPUT_TYPE_DATE_TIME_FIELD:
+      purpose = ZWP_TEXT_INPUT_V1_CONTENT_PURPOSE_DATETIME;
+      break;
+    case TEXT_INPUT_TYPE_NULL:
+      break;
+    default:
+      break;
+  }
+
+  if (text_input_)
+    text_input_->SetContentType(hint, purpose);
+}
+
 void WaylandInputMethodContext::OnPreeditString(
     base::StringPiece text,
     const std::vector<SpanStyle>& spans,
