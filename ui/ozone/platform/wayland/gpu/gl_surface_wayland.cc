@@ -70,6 +70,9 @@ EGLConfig GLSurfaceWayland::GetConfig() {
 }
 
 gfx::SwapResult GLSurfaceWayland::SwapBuffers(PresentationCallback callback) {
+  if (!window_->IsVisible())
+    return gfx::SwapResult::SWAP_FAILED;
+
   UpdateVisualSize();
   return gl::NativeViewGLSurfaceEGL::SwapBuffers(std::move(callback));
 }
